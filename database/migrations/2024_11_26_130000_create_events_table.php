@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('events', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('uuid')->primary();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->comment('主催者ユーザーID');
             $table->string('name')->comment('イベント名');
             $table->timestamps();
