@@ -8,15 +8,15 @@ class CreateQuestionsTable extends Migration
 {
     public function up()
     {
-        if (Schema::hasTable('events') && !Schema::hasTable('questions')) {
-            Schema::create('questions', function (Blueprint $table) {
-                $table->id();
-                $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
-                $table->string('text')->comment('質問文');
-                $table->enum('type', ['multiple_choice', 'text_input'])->comment('質問の種類');
-                $table->timestamps();
-            });
-        }
+        Schema::create('questions', function (Blueprint $table) {
+            $table->id();
+            $table->uuid('event_id'); //イベントID外部キー
+            $table->string('text')->comment('質問文');
+            $table->enum('type', ['multiple_choice', 'text_input'])->comment('質問の種類');
+            $table->timestamps();
+
+            $table->foreign('event_id')->references('uuid')->on('events')->onDelete('cascade');
+        });
     }
 
     public function down()
