@@ -9,12 +9,12 @@
         "@inertiajs/vue3": "^1.0.0",
         "@tailwindcss/forms": "^0.5.3",
         "@vitejs/plugin-vue": "^5.0.0",
-        "autoprefixer": "^10.4.12",
+        "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.0",
-        "postcss": "^8.4.31",
-        "tailwindcss": "^3.2.1",
+        "postcss": "^8.4.49",
+        "tailwindcss": "^3.4.15",
         "vite": "^5.0",
         "vue": "^3.4.0"
     },
@@ -23,6 +23,7 @@
         "@inertiajs/progress": "^0.2.7",
         "@inertiajs/vue3": "^1.2.0",
         "@vitejs/plugin-vue": "^5.2.0",
+        "daisyui": "^4.12.14",
         "firebase": "^11.0.2",
         "vue": "^3.5.13"
     }

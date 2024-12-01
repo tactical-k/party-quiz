@@ -1,9 +1,11 @@
 <script>
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
+import RespondentLayout from '@/Layouts/RespondentLayout.vue';
 
 export default {
     name: 'Welcome',
+    layout: RespondentLayout,
     setup() {
         const name = ref('');
 
@@ -19,11 +21,11 @@ export default {
 </script>
 
 <template>
-    <div>
-        <h1>参加するには名前を入力してください</h1>
+    <RespondentLayout>
+        <h2>名前を入力してクイズに参加しよう！</h2>
         <form @submit.prevent="submit">
-            <input v-model="name" type="text" placeholder="名前" required />
-            <button type="submit">参加</button>
+            <input v-model="name" type="text" placeholder="名前" required class="input input-bordered w-full mb-4" />
+            <button type="submit" class="btn btn-primary w-full">参加</button>
         </form>
-    </div>
+    </RespondentLayout>
 </template>

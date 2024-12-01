@@ -31,7 +31,12 @@ Route::middleware('auth')->group(function () {
 });
 
 // 参加者機能まわり
-Route::inertia('/', 'Start')->name('start');
-Route::inertia('/quiz', 'Quiz')->name('quiz');
+Route::get('/', function () {
+    return Inertia::render('Start');
+})->name('start');
+
+Route::get('/quiz', function () {
+    return Inertia::render('Quiz');
+})->name('quiz');
 
 
