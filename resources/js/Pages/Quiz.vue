@@ -2,9 +2,11 @@
 import { ref, onMounted } from 'vue';
 import { database } from '../firebase'; // Firebaseの初期化スクリプト
 import { ref as dbRef, onValue, push } from 'firebase/database';
+import RespondentLayout from '@/Layouts/RespondentLayout.vue';
 
 export default {
     name: 'Quiz',
+    layout: RespondentLayout,
     setup() {
         const name = ref(localStorage.getItem('participantName') || '匿名');
         const question = ref(null);
@@ -38,15 +40,15 @@ export default {
 </script>
 
 <template>
-    <div>
+    <RespondentLayout>
         <h1>ようこそ {{ name }} さん</h1>
         <div v-if="question">
             <h2>{{ question.text }}</h2>
             <div>
-                <input v-model="answer" type="text" placeholder="回答を入力" />
-                <button @click="submitAnswer">送信</button>
+                <input v-model="answer" type="text" placeholder="回答を入力" class="input input-bordered w-full mb-4" />
+                <button @click="submitAnswer" class="btn btn-primary w-full">送信</button>
             </div>
         </div>
         <p v-else>クイズが始まるのを待っています...</p>
-    </div>
+    </RespondentLayout>
 </template>
