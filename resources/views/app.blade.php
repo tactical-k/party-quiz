@@ -14,8 +14,30 @@
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
         @inertiaHead
+
+        <script>
+            // ダークモードの状態を管理
+            document.addEventListener('DOMContentLoaded', () => {
+                const setDarkMode = (isDarkMode) => {
+                    if (isDarkMode) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                };
+
+                // OSの設定を読み取る
+                const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+                setDarkMode(prefersDarkScheme.matches);
+
+                // OSの設定が変更されたとき
+                prefersDarkScheme.addEventListener('change', (event) => {
+                    setDarkMode(event.matches);
+                });
+            });
+        </script>
     </head>
-    <body class="font-sans antialiased">
+    <body class="font-sans antialiased" :class="{ 'dark': isDarkMode }">
         @inertia
     </body>
 </html>
