@@ -9,7 +9,7 @@ import { Head } from '@inertiajs/vue3';
     <AuthenticatedLayout>
         <template #header>
             <h2
-                class="text-xl font-semibold leading-tight text-gray-800"
+                class="text-xl font-semibold leading-tight text-gray-800 dark:text-white"
             >
                 Dashboard
             </h2>
@@ -18,13 +18,13 @@ import { Head } from '@inertiajs/vue3';
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900">
+                    <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-gray-900 dark:text-gray-100">
                             クイズ作成
                         </div>
                     </div>
-                    <div class="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900">
+                    <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-gray-900 dark:text-gray-100">
                             クイズ出題
                         </div>
                     </div>

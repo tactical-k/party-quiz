@@ -22,8 +22,8 @@ export default {
 
 <template>
     <RespondentLayout>
-        <h2>名前を入力してクイズに参加しよう！</h2>
-        <form @submit.prevent="submit">
+        <h2 class="text-gray-800 dark:text-white">名前を入力してクイズに参加しよう！</h2>
+        <form @submit.prevent="submit" class="mt-4">
             <input v-model="name" type="text" placeholder="名前" required class="input input-bordered w-full mb-4" />
             <button type="submit" class="btn btn-primary w-full">参加</button>
         </form>
