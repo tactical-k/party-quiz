@@ -16,6 +16,18 @@ class Event extends Model
         'user_id',
     ];
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->uuid = (string) \Illuminate\Support\Str::uuid();
+        });
+    }
+
     // リレーション: 一つのイベントは多くの質問を持つ
     public function questions(): HasMany
     {

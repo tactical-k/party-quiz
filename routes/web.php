@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\EventController;
 require __DIR__.'/auth.php';
 
 // ログイン
@@ -18,7 +19,7 @@ Route::get('/admin', function () {
 })->name('admin');
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
@@ -27,7 +28,10 @@ Route::middleware('auth')->group(function () {
   Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
   Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
   //管理者機能まわり
-  Route::get('/set-question', [QuizController::class, 'setQuestion'])->name('set-question');
+  // イベント機能まわり
+  Route::resource('events', EventController::class);
+  // 問題機能まわり
+  Route::get('/setSampleQuestion', [QuizController::class, 'setSampleQuestion'])->name('set-sample-question');
 });
 
 // 参加者機能まわり

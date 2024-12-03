@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 </script>
 
 <template>
@@ -18,15 +18,10 @@ import { Head } from '@inertiajs/vue3';
         <div class="py-12">
             <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                            クイズ作成
-                        </div>
-                    </div>
-                    <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg">
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                            クイズ出題
-                        </div>
+                    <div class="overflow-hidden bg-white dark:bg-gray-800 shadow-lg sm:rounded-lg transition-transform transform hover:scale-105">
+                        <Link :href="route('events.index')" class="p-6 text-gray-900 dark:text-gray-100">
+                            <div class="text-xl font-semibold m-2">イベント一覧</div>
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -35,5 +30,5 @@ import { Head } from '@inertiajs/vue3';
 </template>
 
 <style scoped>
-/* 必要に応じて追加のスタイルをここに記述 */
+/* 追加のスタイルをここに記述 */
 </style>
