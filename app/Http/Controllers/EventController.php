@@ -41,7 +41,7 @@ class EventController extends Controller
                 'user_id' => $userId,
             ]);
         } catch (\Exception $e) {
-            return redirect()->route('events.index')->with('error', 'イベントの登録に失敗しました。');
+            return redirect()->route('events.index')->with('error', $e->getMessage());
         }
 
         // 成功時のレスポンス
@@ -49,31 +49,41 @@ class EventController extends Controller
     }
 
     // 特定のイベントを取得
-    public function show(string $id): InertiaResponse
+    public function show(string $uuid): InertiaResponse
     {
-        $event = Event::findOrFail($id);
+        $event = Event::where('uuid', $uuid)->firstOrFail();
         return Inertia::render('Admin/Events/Show', ['event' => $event]);
     }
 
-    // 特定のイベントを更新
-    public function update(Request $request, string $id): JsonResponse
+    public function edit(string $uuid): InertiaResponse
     {
-        $event = Event::findOrFail($id);
+        $event = Event::where('uuid', $uuid)->firstOrFail();
+        return Inertia::render('Admin/Events/Edit', ['event' => $event]);
+    }
 
+    // 特定のイベントを更新
+    public function update(Request $request, string $uuid): RedirectResponse
+    {
+        $userId = $request->user()->id;
         $request->validate([
             'name' => 'sometimes|required|string|max:255',
             'user_id' => 'sometimes|required|exists:users,id',
         ]);
 
-        $event->update($request->only('name', 'user_id'));
-        return response()->json($event);
+        Event::where('uuid', $uuid)->update(
+            [
+                'name' => $request->name,
+                'user_id' => $userId,
+            ]
+        );
+        return redirect()->route('events.index')->with('success', 'イベントを更新しました。');
     }
 
     // 特定のイベントを削除
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $uuid): RedirectResponse
     {
-        $event = Event::findOrFail($id);
-        $event->delete();
-        return response()->json(null, HttpResponse::HTTP_NO_CONTENT);
+        Event::query()->where('uuid', $uuid)->delete();
+
+        return redirect()->route('events.index')->with('success', 'イベントを削除しました。');
     }
 }
