@@ -49,10 +49,18 @@ class EventController extends Controller
     // 特定のイベントを取得
     public function show(string $uuid): InertiaResponse
     {
-        $event = Event::where('uuid', $uuid)->firstOrFail();
+        // イベントに紐つく問題・選択肢を合わせて取得
+        $event = Event::with(['questions' => function($query) {
+                $query->orderBy('id'); // questionsをid順に並べ替え
+            }, 'questions.choices' => function($query) {
+                $query->orderBy('id'); // choicesをid順に並べ替え
+            }])
+            ->where('uuid', $uuid)
+            ->firstOrFail();
         return Inertia::render('Admin/Events/Show', ['event' => $event]);
     }
 
+    // 特定のイベントを編集するためのフォームを表示
     public function edit(string $uuid): InertiaResponse
     {
         $event = Event::where('uuid', $uuid)->firstOrFail();
