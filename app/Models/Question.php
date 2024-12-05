@@ -12,8 +12,10 @@ class Question extends Model
     use HasFactory;
 
     protected $fillable = [
+        'event_id',
         'text',
         'type',
+        'created_at',
     ];
 
     // リレーション: 一つの質問は多くの選択肢を持つ
@@ -24,6 +26,6 @@ class Question extends Model
 
     public function event(): BelongsTo
     {
-        return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class, 'event_id', 'uuid');
     }
 }

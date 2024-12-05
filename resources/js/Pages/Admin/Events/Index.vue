@@ -2,12 +2,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head, Link } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
-
 const { props } = usePage();
+const events = props.events;
+import { ref, computed } from 'vue';
 const successMessage = props.flash.successMessage || '';
 const errorMessage = props.flash.errorMessage || '';
-const events = props.events;
 </script>
 
 <template>

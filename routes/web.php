@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\QuestionController;
 require __DIR__.'/auth.php';
 
 // ログイン
@@ -32,6 +33,9 @@ Route::middleware('auth')->group(function () {
   Route::resource('events', EventController::class);
   // 問題機能まわり
   Route::get('/setSampleQuestion', [QuizController::class, 'setSampleQuestion'])->name('set-sample-question');
+  Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
+  Route::put('/questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
+  Route::delete('/questions/{question_id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
 });
 
 // 参加者機能まわり

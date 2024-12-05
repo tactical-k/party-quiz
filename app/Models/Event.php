@@ -31,7 +31,7 @@ class Event extends Model
     // リレーション: 一つのイベントは多くの質問を持つ
     public function questions(): HasMany
     {
-        return $this->hasMany(Question::class);
+        return $this->hasMany(Question::class, 'event_id', 'uuid');
     }
 
     public function user(): BelongsTo
