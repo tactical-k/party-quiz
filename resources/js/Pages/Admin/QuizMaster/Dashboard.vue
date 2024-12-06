@@ -34,6 +34,28 @@ const confirmSubmit = async () => {
         showModal.value = false;
     }
 }
+
+const showClearQuestionModal = ref(false);
+
+const openClearQuestionModal = () => {
+    showClearQuestionModal.value = true;
+}
+
+const confirmClearQuestion = async () => {
+    try {
+        const response = await axios.post(`/clearQuestion/${event.uuid}`);
+        if (response.data.status === 'success') {
+            alert('質問をクリアしました。');
+            window.location.reload();
+        } else {
+            alert('質問のクリアに失敗しました。');
+        }
+    } catch (error) {
+        console.error('Error clearing question:', error);
+    } finally {
+        showClearQuestionModal.value = false;
+    }
+}
 </script>
 
 <template>
@@ -51,17 +73,25 @@ const confirmSubmit = async () => {
             <div class="flex justify-between items-center m-4">
                 <h1 class="text-2xl font-bold">{{ event.name }}</h1>
             </div>
-            <div v-for="question in event.questions" :key="question.id">
-              <div class="card bg-base-100 w-96 shadow-xl">
-                  <div class="card-body">
-                      <h2 class="card-title">{{ question.text }}</h2>
-                      <div class="card-actions justify-end">
-                          <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
-                              {{ question.is_submitted ? '出題済み' : '出題する' }}
-                          </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div v-for="question in event.questions" :key="question.id">
+                  <div class="card bg-base-100 w-full shadow-xl">
+                      <div class="card-body">
+                          <h2 class="card-title">{{ question.text }}</h2>
+                          <div class="card-actions justify-end">
+                              <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
+                                  {{ question.is_submitted ? '出題済み' : '出題する' }}
+                              </button>
+                          </div>
                       </div>
                   </div>
               </div>
+            </div>
+            <!-- フローティングボタン -->
+            <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
+                <button class="btn btn-error btn-lg rounded-full" @click="openClearQuestionModal">
+                    クイズを最初からやり直す
+                </button>
             </div>
             <div v-if="showModal" class="modal modal-open">
                 <div class="modal-box">
@@ -70,6 +100,17 @@ const confirmSubmit = async () => {
                     <div class="modal-action">
                       <button class="btn" @click="showModal = false">いいえ</button>
                       <button class="btn btn-primary" @click="confirmSubmit">はい</button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showClearQuestionModal" class="modal modal-open">
+                <div class="modal-box">
+                    <h2 class="font-bold">確認</h2>
+                    <p>このクイズを最初からやり直しますか？</p>
+                    <p>※この操作は取り消すことができません。</p>
+                    <div class="modal-action">
+                      <button class="btn" @click="showClearQuestionModal = false">いいえ</button>
+                      <button class="btn btn-error" @click="confirmClearQuestion">はい</button>
                     </div>
                 </div>
             </div>

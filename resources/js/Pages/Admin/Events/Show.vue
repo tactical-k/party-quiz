@@ -40,6 +40,10 @@ const cancelDelete = () => {
 };
 
 const submitDelete = () => {
+    if (questionToDelete.value.is_submitted) {
+        alert('出題済みの問題は削除できません。');
+        return;
+    }
     if (questionToDelete.value) {
         // 削除APIを実行
         router.delete(route('questions.destroy', { question_id: questionToDelete.value.id }), {
@@ -172,8 +176,8 @@ const copyToClipboard = (text) => {
                         <div class="flex justify-between items-center">
                             <h3 class="text-lg font-semibold">{{ question.text }}</h3>
                             <div class="flex space-x-2">
-                                <button class="btn btn-error" @click="confirmDeleteQuestion(question)">削除</button>
-                                <button class="btn btn-primary" @click="openQuestionModal(question)">編集</button>
+                                <button class="btn btn-error" @click="confirmDeleteQuestion(question)" :disabled="question.is_submitted">削除</button>
+                                <button class="btn btn-primary" @click="openQuestionModal(question)" :disabled="question.is_submitted">編集</button>
                             </div>
                         </div>
                         <div v-for="choice in question.choices" :key="choice.id" class="ml-4">

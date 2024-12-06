@@ -42,4 +42,14 @@ class PostFirebaseRealTimeDatabaseService
             return ['status' => 'error', 'message' => $e->getMessage()];
         }
     }
+
+    public function clearQuestion(string $event_id): array
+    {
+        try {
+            $this->database->getReference("{$event_id}")->set(null);
+            return ['status' => 'success'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
 }
