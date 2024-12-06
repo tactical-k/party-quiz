@@ -73,14 +73,16 @@ const confirmClearQuestion = async () => {
             <div class="flex justify-between items-center m-4">
                 <h1 class="text-2xl font-bold">{{ event.name }}</h1>
             </div>
-            <div v-for="question in event.questions" :key="question.id">
-              <div class="card bg-base-100 w-96 shadow-xl">
-                  <div class="card-body">
-                      <h2 class="card-title">{{ question.text }}</h2>
-                      <div class="card-actions justify-end">
-                          <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
-                              {{ question.is_submitted ? '出題済み' : '出題する' }}
-                          </button>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div v-for="question in event.questions" :key="question.id">
+                  <div class="card bg-base-100 w-full shadow-xl">
+                      <div class="card-body">
+                          <h2 class="card-title">{{ question.text }}</h2>
+                          <div class="card-actions justify-end">
+                              <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
+                                  {{ question.is_submitted ? '出題済み' : '出題する' }}
+                              </button>
+                          </div>
                       </div>
                   </div>
               </div>
