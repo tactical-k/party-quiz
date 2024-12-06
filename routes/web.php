@@ -4,9 +4,11 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuizMasterController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RespondentsAnswerController;
+use App\Models\Event;
 require __DIR__.'/auth.php';
 
 // ログイン
@@ -29,22 +31,31 @@ Route::middleware('auth')->group(function () {
   Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
   Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
   //管理者機能まわり
-  // イベント機能まわり
+  // イベントCRUD
   Route::resource('events', EventController::class);
-  // 問題機能まわり
-  Route::get('/setSampleQuestion', [QuizController::class, 'setSampleQuestion'])->name('set-sample-question');
+  // 問題CRUD
   Route::post('/questions', [QuestionController::class, 'store'])->name('questions.store');
   Route::put('/questions/{question_id}', [QuestionController::class, 'update'])->name('questions.update');
   Route::delete('/questions/{question_id}', [QuestionController::class, 'destroy'])->name('questions.destroy');
+  // クイズ主催機能
+  Route::get('/setSampleQuestion', [QuizMasterController::class, 'setSampleQuestion'])->name('set-sample-question');
+  Route::get('/quizMaster/{event_id}', [QuizMasterController::class, 'quizMaster'])->name('quiz-master');
+  Route::post('/submitQuestion/{question_id}', [QuizMasterController::class, 'submitQuestion'])->name('submit-question');
 });
 
 // 参加者機能まわり
-Route::get('/', function () {
-    return Inertia::render('Start');
+Route::get('/{event_id}', function (string $event_id) {
+    if (!Event::where('uuid', $event_id)->exists()) {
+        abort(404);
+    }
+    return Inertia::render('Start', ['event_id' => $event_id]);
 })->name('start');
 
-Route::get('/quiz', function () {
-    return Inertia::render('Quiz');
+Route::get('/events/{event_id}/quiz', function (string $event_id) {
+    if (!Event::where('uuid', $event_id)->exists()) {
+        abort(404);
+    }
+    return Inertia::render('Quiz', ['event_id' => $event_id]);
 })->name('quiz');
 
-
+Route::post('/events/{event_id}/quiz', [RespondentsAnswerController::class, 'store'])->name('respondents-answers.store');

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Services;
 
-use Illuminate\Http\JsonResponse;
+use App\Models\Question;
 use Kreait\Firebase\Factory;
 
-class QuizController extends Controller
+class PostFirebaseRealTimeDatabaseService
 {
     protected $database;
 
@@ -28,14 +28,18 @@ class QuizController extends Controller
         $this->database = $firebase->withDatabaseUri(env('VITE_FIREBASE_DATABASE_URL'))->createDatabase();
     }
 
-    // サンプル問題をセットする
-    public function setSampleQuestion(): JsonResponse
+    public function syncQuestion(string $questionId)
     {
-        $this->database->getReference('currentQuestion')->set([
-            'text' => '3 + 2 は何ですか？',
-            'choices' => ['3', '4', '5', '6']
-        ]);
-
-        return response()->json(['status' => 'success']);
+        $question = Question::with('choices')->where('id', $questionId)->first();
+        try {
+            $this->database->getReference("{$question->event_id}/currentQuestion")->set([
+                'question_id' => $question->id,
+                'text' => $question->text,
+                'choices' => $question->choices->pluck('text'),
+            ]);
+            return ['status' => 'success'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
     }
 }

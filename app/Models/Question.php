@@ -18,6 +18,10 @@ class Question extends Model
         'created_at',
     ];
 
+    protected $casts = [
+        'is_submitted' => 'boolean',
+    ];
+
     // リレーション: 一つの質問は多くの選択肢を持つ
     public function choices(): HasMany
     {
@@ -27,5 +31,10 @@ class Question extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class, 'event_id', 'uuid');
+    }
+
+    public function respondentsAnswers(): HasMany
+    {
+        return $this->hasMany(RespondentsAnswer::class);
     }
 }
