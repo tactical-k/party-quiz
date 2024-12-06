@@ -186,10 +186,13 @@ const submitForm = () => {
                 </div>
             </div>
             <!-- フローティングボタン -->
-            <div class="fixed bottom-4 right-4">
+            <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
                 <button class="btn btn-success btn-lg rounded-full" @click="openQuestionModal">
                     問題を追加する
                 </button>
+                <Link :href="`/quizMaster/${event.uuid}`" class="btn btn-primary btn-lg rounded-full">
+                    クイズを開始する
+                </Link>
             </div>
             <!-- 問題追加/編集モーダル -->
             <div v-if="showQuestionModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
