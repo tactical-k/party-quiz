@@ -57,11 +57,11 @@ const submitAnswer = async () => {
     <RespondentLayout>
         <h1>ようこそ {{ name }} さん</h1>
         <div v-if="question">
-            <h2>{{ question.text }}</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ question.text }}</h2>
             <div v-for="choice in question.choices" :key="choice">
-                <div>
-                    <input type="radio" :value="choice" v-model="answer" class="mr-2" />
-                    {{ choice }}
+                <div class="flex items-center mb-2">
+                    <input type="radio" :id="choice" :value="choice" v-model="answer" class="mr-2 radio radio-primary" />
+                    <label :for="choice" class="cursor-pointer">{{ choice }}</label>
                 </div>
             </div>
             <div>
