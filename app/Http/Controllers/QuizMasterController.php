@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\FirebaseService;
 use Illuminate\Http\JsonResponse;
 use App\Models\Event;
 use Inertia\Inertia;
@@ -13,24 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class QuizMasterController extends Controller
 {
-    protected $firebaseService;
+    protected PostFirebaseRealTimeDatabaseService $firebaseService;
 
     public function __construct(PostFirebaseRealTimeDatabaseService $firebaseService)
     {
         $this->firebaseService = $firebaseService;
     }
 
-    // サンプル問題をセットする
-    // public function setSampleQuestion(): JsonResponse
-    // {
-    //     $this->firebaseService->database->getReference('currentQuestion')->set([
-    //         'text' => '3 + 2 は何ですか？',
-    //         'choices' => ['3', '4', '5', '6']
-    //     ]);
-
-    //     return response()->json(['status' => 'success']);
-    // }
-    
     public function quizMaster(string $event_id): InertiaResponse
     {
         $event = Event::with('questions')->where('uuid', $event_id)->firstOrFail();
@@ -54,5 +42,20 @@ class QuizMasterController extends Controller
         }
 
         return response()->json(['status' => 'success']);
-    }   
+    }
+
+    public function clearQuestion(string $event_id): JsonResponse
+    {
+        $event = Event::where('uuid', $event_id)->firstOrFail();
+
+        // N+1問題を回避するために、全ての質問を一度に更新
+        $event->questions()->update(['is_submitted' => false]);
+
+        // firebaseの質問をクリアする
+        $clearResult = $this->firebaseService->clearQuestion($event->uuid);
+        if ($clearResult['status'] === 'error') {
+            return response()->json(['status' => 'error', 'message' => $clearResult['message']], 500);
+        }
+        return response()->json(['status' => 'success']);
+    }
 }

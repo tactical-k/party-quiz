@@ -34,6 +34,28 @@ const confirmSubmit = async () => {
         showModal.value = false;
     }
 }
+
+const showClearQuestionModal = ref(false);
+
+const openClearQuestionModal = () => {
+    showClearQuestionModal.value = true;
+}
+
+const confirmClearQuestion = async () => {
+    try {
+        const response = await axios.post(`/clearQuestion/${event.uuid}`);
+        if (response.data.status === 'success') {
+            alert('質問をクリアしました。');
+            window.location.reload();
+        } else {
+            alert('質問のクリアに失敗しました。');
+        }
+    } catch (error) {
+        console.error('Error clearing question:', error);
+    } finally {
+        showClearQuestionModal.value = false;
+    }
+}
 </script>
 
 <template>
@@ -63,6 +85,12 @@ const confirmSubmit = async () => {
                   </div>
               </div>
             </div>
+            <!-- フローティングボタン -->
+            <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
+                <button class="btn btn-error btn-lg rounded-full" @click="openClearQuestionModal">
+                    質問をクリアする
+                </button>
+            </div>
             <div v-if="showModal" class="modal modal-open">
                 <div class="modal-box">
                     <h2 class="font-bold">確認</h2>
@@ -70,6 +98,16 @@ const confirmSubmit = async () => {
                     <div class="modal-action">
                       <button class="btn" @click="showModal = false">いいえ</button>
                       <button class="btn btn-primary" @click="confirmSubmit">はい</button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showClearQuestionModal" class="modal modal-open">
+                <div class="modal-box">
+                    <h2 class="font-bold">確認</h2>
+                    <p>この質問をクリアしますか？</p>
+                    <div class="modal-action">
+                      <button class="btn" @click="showClearQuestionModal = false">いいえ</button>
+                      <button class="btn btn-error" @click="confirmClearQuestion">はい</button>
                     </div>
                 </div>
             </div>
