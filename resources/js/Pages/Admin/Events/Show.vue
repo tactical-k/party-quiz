@@ -143,7 +143,7 @@ const submitForm = () => {
         <div class="container mx-auto">
             <div class="flex justify-between items-center m-4">
                 <h1 class="text-2xl font-bold">イベント詳細</h1>
-                <div class="mt-4 flex justify-end">
+                <div class="mt-4 flex justify-end space-x-2">
                     <Link :href="`/events`" class="btn btn-neutral mr-2">イベント一覧</Link>
                     <button class="btn btn-error mr-2" @click="confirmDelete">このイベントを削除</button>
                     <Link :href="`/events/${event.uuid}/edit`" class="btn btn-primary">このイベントを編集</Link>
@@ -156,15 +156,19 @@ const submitForm = () => {
                 <p class="text-gray-500">問題が登録されていません。</p>
             </div>
             <div v-else class="mt-4">
-                <div v-for="question in event.questions" :key="question.id" class="card bg-base-200 mb-4">
+                <div v-for="question in event.questions" :key="question.id" class="card bg-base-300 mb-4">
                     <div class="card-body">
-                        <h3 class="text-lg font-semibold">{{ question.text }}</h3>
+                        <div class="flex justify-between items-center">
+                            <h3 class="text-lg font-semibold">{{ question.text }}</h3>
+                            <div class="flex space-x-2">
+                                <button class="btn btn-error" @click="confirmDeleteQuestion(question)">削除</button>
+                                <button class="btn btn-primary" @click="openQuestionModal(question)">編集</button>
+                            </div>
+                        </div>
                         <div v-for="choice in question.choices" :key="choice.id" class="ml-4">
                             <p class="text-gray-700">{{ choice.text }}</p>
                             <p class="text-gray-500">{{ choice.is_correct ? 'O' : 'X' }}</p>
                         </div>
-                        <button class="btn btn-primary mt-2" @click="openQuestionModal(question)">編集</button> <!-- 編集ボタン -->
-                        <button class="btn btn-error mt-2" @click="confirmDeleteQuestion(question)">削除</button> <!-- 削除ボタン -->
                     </div>
                 </div>
             </div>
