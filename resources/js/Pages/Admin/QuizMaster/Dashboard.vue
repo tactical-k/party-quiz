@@ -90,7 +90,7 @@ const confirmClearQuestion = async () => {
             <!-- フローティングボタン -->
             <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
                 <button class="btn btn-error btn-lg rounded-full" @click="openClearQuestionModal">
-                    質問をクリアする
+                    クイズを最初からやり直す
                 </button>
             </div>
             <div v-if="showModal" class="modal modal-open">
@@ -106,7 +106,8 @@ const confirmClearQuestion = async () => {
             <div v-if="showClearQuestionModal" class="modal modal-open">
                 <div class="modal-box">
                     <h2 class="font-bold">確認</h2>
-                    <p>この質問をクリアしますか？</p>
+                    <p>このクイズを最初からやり直しますか？</p>
+                    <p>※この操作は取り消すことができません。</p>
                     <div class="modal-action">
                       <button class="btn" @click="showClearQuestionModal = false">いいえ</button>
                       <button class="btn btn-error" @click="confirmClearQuestion">はい</button>
