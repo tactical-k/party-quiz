@@ -38,4 +38,9 @@ class Event extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function respondentsAnswers(): HasMany
+    {
+        return $this->hasMany(RespondentsAnswer::class);
+    }
 }

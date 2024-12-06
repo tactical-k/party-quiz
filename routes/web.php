@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\QuizMasterController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\RespondentsAnswerController;
+use App\Models\Event;
 require __DIR__.'/auth.php';
 
 // ログイン
@@ -42,12 +44,18 @@ Route::middleware('auth')->group(function () {
 });
 
 // 参加者機能まわり
-Route::get('/', function () {
-    return Inertia::render('Start');
+Route::get('/{event_id}', function (string $event_id) {
+    if (!Event::where('uuid', $event_id)->exists()) {
+        abort(404);
+    }
+    return Inertia::render('Start', ['event_id' => $event_id]);
 })->name('start');
 
-Route::get('/quiz', function () {
-    return Inertia::render('Quiz');
+Route::get('/events/{event_id}/quiz', function (string $event_id) {
+    if (!Event::where('uuid', $event_id)->exists()) {
+        abort(404);
+    }
+    return Inertia::render('Quiz', ['event_id' => $event_id]);
 })->name('quiz');
 
-
+Route::post('/events/{event_id}/quiz', [RespondentsAnswerController::class, 'store'])->name('respondents-answers.store');

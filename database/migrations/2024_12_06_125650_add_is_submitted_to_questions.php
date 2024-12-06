@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('questions', function (Blueprint $table) {
-            $table->boolean('is_submitted')->default(false)->comment('出題済み')->after('type');
-        });
+        if (!Schema::hasColumn('questions', 'is_submitted')) {
+            Schema::table('questions', function (Blueprint $table) {
+                $table->boolean('is_submitted')->default(false)->comment('出題済み')->after('type');
+            });
+        }
     }
 
     /**

@@ -32,4 +32,9 @@ class Question extends Model
     {
         return $this->belongsTo(Event::class, 'event_id', 'uuid');
     }
+
+    public function respondentsAnswers(): HasMany
+    {
+        return $this->hasMany(RespondentsAnswer::class);
+    }
 }

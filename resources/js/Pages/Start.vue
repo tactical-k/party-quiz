@@ -1,22 +1,18 @@
-<script>
+<script setup>
 import { ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 import RespondentLayout from '@/Layouts/RespondentLayout.vue';
 
-export default {
-    name: 'Welcome',
-    layout: RespondentLayout,
-    setup() {
-        const name = ref('');
+const props = defineProps({
+    event_id: String,
+});
 
-        const submit = () => {
-            if (name.value.trim() === '') return alert('名前を入力してください');
-            localStorage.setItem('participantName', name.value);
-            router.visit('/quiz', { data: { name: name.value } });
-        };
+const name = ref('');
 
-        return { name, submit };
-    },
+const submit = () => {
+    if (name.value.trim() === '') return alert('名前を入力してください');
+    localStorage.setItem('participantName', name.value);
+    router.visit(`/events/${props.event_id}/quiz`, { data: { name: name.value } });
 };
 </script>
 
