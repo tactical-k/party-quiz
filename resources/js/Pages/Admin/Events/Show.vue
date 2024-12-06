@@ -7,6 +7,8 @@ import { useForm } from '@inertiajs/inertia-vue3'; // useFormをインポート
 import { usePage } from '@inertiajs/vue3'; // usePageをインポート
 import NotificationToast from '@/Components/NotificationToast.vue'; // コンポーネントをインポート
 
+const appUrl = import.meta.env.VITE_APP_URL || 'http://localhost';
+
 const props = defineProps({
     event: Object, // 親から渡されるeventプロパティを定義
 });
@@ -134,6 +136,14 @@ const submitForm = () => {
     }
 };
 
+const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+        alert('クリップボードにコピーしました！'); // コピー成功時のメッセージ
+    }).catch(err => {
+        console.error('コピーに失敗しました:', err); // エラーハンドリング
+    });
+};
+
 </script>
 
 <template>
@@ -151,6 +161,7 @@ const submitForm = () => {
             </div>
             <div class="bg-base-100 p-4 rounded-lg shadow-lg">
                 <h2 class="text-xl font-semibold">イベント名: {{ event.name }}</h2>
+                <p class="text-gray-500 cursor-pointer" @click="copyToClipboard(appUrl + `/${event.uuid}`)">参加者向けURLをコピー📋</p>
             </div>
             <div class="flex justify-center" v-if="event.questions.length === 0">
                 <p class="text-gray-500">問題が登録されていません。</p>
