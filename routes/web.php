@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
   Route::get('/quizMaster/{event_id}', [QuizMasterController::class, 'quizMaster'])->name('quiz-master');
   Route::post('/submitQuestion/{question_id}', [QuizMasterController::class, 'submitQuestion'])->name('submit-question');
   Route::post('/clearQuestion/{event_id}', [QuizMasterController::class, 'clearQuestion'])->name('clear-question');
+  Route::get('/summary/{event_id}', [QuizMasterController::class, 'summary'])->name('summary');
 });
 
 // 参加者機能まわり

@@ -1,14 +1,12 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
+import { Head, router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import axios from 'axios';
 const { props } = usePage();
 const event = props.event;
 const successMessage = props.flash.successMessage || '';
 const errorMessage = props.flash.errorMessage || '';
-
 const showModal = ref(false);
 const selectedQuestionId = ref(null);
 
@@ -56,6 +54,11 @@ const confirmClearQuestion = async () => {
         showClearQuestionModal.value = false;
     }
 }
+
+const goToSummary = () => {
+    console.log(event.uuid);
+    router.visit(`/summary/${event.uuid}`);
+}
 </script>
 
 <template>
@@ -89,6 +92,9 @@ const confirmClearQuestion = async () => {
             </div>
             <!-- フローティングボタン -->
             <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
+                <button class="btn btn-primary btn-lg rounded-full" @click="goToSummary">
+                    回答集計
+                </button>
                 <button class="btn btn-error btn-lg rounded-full" @click="openClearQuestionModal">
                     クイズを最初からやり直す
                 </button>

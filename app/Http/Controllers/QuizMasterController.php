@@ -14,6 +14,7 @@ use App\Models\RespondentsAnswer;
 class QuizMasterController extends Controller
 {
     protected PostFirebaseRealTimeDatabaseService $firebaseService;
+    const SUMMARY_RESPONDENTS_ANSWERS_LIMIT = 15;
 
     public function __construct(PostFirebaseRealTimeDatabaseService $firebaseService)
     {
@@ -71,5 +72,21 @@ class QuizMasterController extends Controller
         DB::commit();
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function summary(string $event_id): InertiaResponse
+    {
+        $summary = RespondentsAnswer::select('respondents_answers.name', DB::raw('COUNT(*) AS correct_count'))
+            ->join('questions AS q', 'respondents_answers.question_id', '=', 'q.id')
+            ->join('choices AS c', 'q.id', '=', 'c.question_id')
+            ->where('respondents_answers.event_id', $event_id)
+            ->where('c.is_correct', true)
+            ->whereColumn('respondents_answers.answer', 'c.text')
+            ->groupBy('respondents_answers.name')
+            ->limit(self::SUMMARY_RESPONDENTS_ANSWERS_LIMIT)
+            ->orderBy('correct_count', 'desc')
+            ->get();
+
+        return Inertia::render('Admin/QuizMaster/Summary', ['summary' => $summary]);
     }
 }
