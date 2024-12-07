@@ -8,8 +8,9 @@ use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 use App\Models\Question;
 use App\Services\PostFirebaseRealTimeDatabaseService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\RespondentsAnswer;
 class QuizMasterController extends Controller
 {
     protected PostFirebaseRealTimeDatabaseService $firebaseService;
@@ -46,16 +47,29 @@ class QuizMasterController extends Controller
 
     public function clearQuestion(string $event_id): JsonResponse
     {
+        
         $event = Event::where('uuid', $event_id)->firstOrFail();
+
+        // トランザクションを開始
+        DB::beginTransaction();
 
         // N+1問題を回避するために、全ての質問を一度に更新
         $event->questions()->update(['is_submitted' => false]);
 
+        // 回答済みの回答をクリアする
+        RespondentsAnswer::where('event_id', $event_id)->delete();
+
         // firebaseの質問をクリアする
         $clearResult = $this->firebaseService->clearQuestion($event->uuid);
         if ($clearResult['status'] === 'error') {
+            // RealTimeDatabaseの同期に失敗した場合はロールバック
+            DB::rollBack();
             return response()->json(['status' => 'error', 'message' => $clearResult['message']], 500);
         }
+
+        // トランザクションをコミット
+        DB::commit();
+
         return response()->json(['status' => 'success']);
     }
 }
