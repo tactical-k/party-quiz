@@ -12,6 +12,7 @@ const previousAnswer = ref('');// 答え合わせ用
 
 const props = defineProps({
     event_id: String,
+    event_name: String,
 });
 
 // 質問をリアルタイムで取得
@@ -60,7 +61,7 @@ const submitAnswer = async () => {
 </script>
 
 <template>
-    <RespondentLayout>
+    <RespondentLayout :event_name="event_name">
         <h1>ようこそ {{ name }} さん</h1>
         <div v-if="question">
             <!-- 質問の場合 -->
