@@ -43,6 +43,10 @@ const submitAnswer = async () => {
         if (response.data.status === 'success') {
             alert('回答が正常に送信されました');
             question.value = null; // 質問をリセット
+        } else if (response.data.status === 'already_answered') {
+            alert('すでに回答済みです。次の問題までお待ちください。');
+            question.value = null; // 質問をリセット
+
         } else {
             alert('回答の送信に失敗しました。再試行してください。');
         }

@@ -23,8 +23,8 @@ class RespondentsAnswerController extends Controller
             ->first();
 
         if ($respondentAnswer) {
-            // レコードが存在する場合は更新
-            $respondentAnswer->update($validatedData);
+            // レコードが存在する場合は回答済みとして終了
+            return response()->json(['status' => 'already_answered']);
         } else {
             // レコードが存在しない場合は新規作成
             RespondentsAnswer::create($validatedData);
