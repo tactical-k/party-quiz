@@ -41,6 +41,7 @@ Route::middleware('auth')->group(function () {
   Route::get('/setSampleQuestion', [QuizMasterController::class, 'setSampleQuestion'])->name('set-sample-question');
   Route::get('/quizMaster/{event_id}', [QuizMasterController::class, 'quizMaster'])->name('quiz-master');
   Route::post('/submitQuestion/{question_id}', [QuizMasterController::class, 'submitQuestion'])->name('submit-question');
+  Route::post('/displayAnswer/{question_id}', [QuizMasterController::class, 'displayAnswer'])->name('display-answer');
   Route::post('/clearQuestion/{event_id}', [QuizMasterController::class, 'clearQuestion'])->name('clear-question');
   Route::get('/summary/{event_id}', [QuizMasterController::class, 'summary'])->name('summary');
 });
@@ -50,14 +51,18 @@ Route::get('/{event_id}', function (string $event_id) {
     if (!Event::where('uuid', $event_id)->exists()) {
         abort(404);
     }
-    return Inertia::render('Start', ['event_id' => $event_id]);
+    // todo: Controllerに切り出す
+    $event = Event::where('uuid', $event_id)->first();
+    return Inertia::render('Start', ['event_id' => $event_id, 'event_name' => $event->name]);
 })->name('start');
 
 Route::get('/events/{event_id}/quiz', function (string $event_id) {
     if (!Event::where('uuid', $event_id)->exists()) {
         abort(404);
     }
-    return Inertia::render('Quiz', ['event_id' => $event_id]);
+    // todo: Controllerに切り出す
+    $event = Event::where('uuid', $event_id)->first();
+    return Inertia::render('Quiz', ['event_id' => $event_id, 'event_name' => $event->name]);
 })->name('quiz');
 
 Route::post('/events/{event_id}/quiz', [RespondentsAnswerController::class, 'store'])->name('respondents-answers.store');

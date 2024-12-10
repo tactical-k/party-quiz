@@ -32,10 +32,26 @@ class PostFirebaseRealTimeDatabaseService
     {
         $question = Question::with('choices')->where('id', $questionId)->first();
         try {
-            $this->database->getReference("{$question->event_id}/currentQuestion")->set([
+            $this->database->getReference("{$question->event_id}/currentDisplay")->set([
+                'type' => 'question',
                 'question_id' => $question->id,
                 'text' => $question->text,
                 'choices' => $question->choices->pluck('text'),
+            ]);
+            return ['status' => 'success'];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function syncAnswer(string $questionId)
+    {
+        $question = Question::with('choices')->where('id', $questionId)->first();
+        try {
+            $this->database->getReference("{$question->event_id}/currentDisplay")->set([
+                'type' => 'answer',
+                'question_id' => $question->id,
+                'text' => $question->choices->where('is_correct', true)->first()->text,
             ]);
             return ['status' => 'success'];
         } catch (\Exception $e) {

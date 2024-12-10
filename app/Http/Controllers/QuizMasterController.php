@@ -46,6 +46,12 @@ class QuizMasterController extends Controller
         return response()->json(['status' => 'success']);
     }
 
+    public function displayAnswer(string $question_id): JsonResponse
+    {
+        $this->firebaseService->syncAnswer($question_id);
+        return response()->json(['status' => 'success']);
+    }
+
     public function clearQuestion(string $event_id): JsonResponse
     {
         

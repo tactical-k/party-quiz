@@ -5,6 +5,7 @@ import RespondentLayout from '@/Layouts/RespondentLayout.vue';
 
 const props = defineProps({
     event_id: String,
+    event_name: String,
 });
 
 const name = ref('');
@@ -17,7 +18,7 @@ const submit = () => {
 </script>
 
 <template>
-    <RespondentLayout>
+    <RespondentLayout :event_name="event_name">
         <h2 class="text-gray-800 dark:text-white">名前を入力してクイズに参加しよう！</h2>
         <form @submit.prevent="submit" class="mt-4">
             <input v-model="name" type="text" placeholder="名前" required class="input input-bordered w-full mb-4" />

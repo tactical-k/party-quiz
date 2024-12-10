@@ -7,29 +7,49 @@ const { props } = usePage();
 const event = props.event;
 const successMessage = props.flash.successMessage || '';
 const errorMessage = props.flash.errorMessage || '';
-const showModal = ref(false);
+const showSubmitQuestionModal = ref(false);
+const showDisplayAnswerModal = ref(false);
 const selectedQuestionId = ref(null);
 
 const submitQuestion = (questionId) => {
     selectedQuestionId.value = questionId;
-    showModal.value = true;
+    showSubmitQuestionModal.value = true;
 }
 
-const confirmSubmit = async () => {
+const displayAnswer = (questionId) => {
+    selectedQuestionId.value = questionId;
+    showDisplayAnswerModal.value = true;
+}
+
+const confirmSubmitAnswerSubmit = async () => {
     try {
         const response = await axios.post(`/submitQuestion/${selectedQuestionId.value}`);
-        console.log(response.data.status);
         if (response.data.status === 'success') {
-          alert('質問を出題しました。');
-          // 質問のis_submittedをtrueにする
-          event.questions.find(question => question.id === selectedQuestionId.value).is_submitted = true;
+            alert('質問を出題しました。');
+            // 質問のis_submittedをtrueにする
+            event.questions.find(question => question.id === selectedQuestionId.value).is_submitted = true;
         } else {
-          alert('質問の出題に失敗しました。');
+            alert('質問の出題に失敗しました。');
         }
     } catch (error) {
         console.error('Error submitting question:', error);
     } finally {
-        showModal.value = false;
+        showSubmitQuestionModal.value = false;
+    }
+}
+
+const confirmDisplayAnswer = async () => {
+    try {
+        const response = await axios.post(`/displayAnswer/${selectedQuestionId.value}`);
+        if (response.data.status === 'success') {
+            alert('回答を表示しました。');
+        } else {
+            alert('回答の表示に失敗しました。');
+        }
+    } catch (error) {
+        console.error('Error displaying answer:', error);
+    } finally {
+        showDisplayAnswerModal.value = false;
     }
 }
 
@@ -77,18 +97,21 @@ const goToSummary = () => {
                 <h1 class="text-2xl font-bold">{{ event.name }}</h1>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div v-for="question in event.questions" :key="question.id">
-                  <div class="card bg-base-100 w-full shadow-xl">
-                      <div class="card-body">
-                          <h2 class="card-title">{{ question.text }}</h2>
-                          <div class="card-actions justify-end">
-                              <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
-                                  {{ question.is_submitted ? '出題済み' : '出題する' }}
-                              </button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
+                <div v-for="question in event.questions" :key="question.id">
+                    <div class="card bg-base-100 w-full shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title">{{ question.text }}</h2>
+                            <div class="card-actions justify-end">
+                                <button class="btn btn-primary" :disabled="question.is_submitted" @click="submitQuestion(question.id)">
+                                    {{ question.is_submitted ? '出題済み' : '出題する' }}
+                                </button>
+                                <button class="btn btn-secondary" :disabled="!question.is_submitted" @click="displayAnswer(question.id)">
+                                    回答を表示
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- フローティングボタン -->
             <div class="fixed bottom-4 right-4 flex flex-col space-y-2">
@@ -99,13 +122,23 @@ const goToSummary = () => {
                     クイズを最初からやり直す
                 </button>
             </div>
-            <div v-if="showModal" class="modal modal-open">
+            <div v-if="showSubmitQuestionModal" class="modal modal-open">
                 <div class="modal-box">
                     <h2 class="font-bold">確認</h2>
                     <p>この質問を出題しますか？</p>
                     <div class="modal-action">
-                      <button class="btn" @click="showModal = false">いいえ</button>
-                      <button class="btn btn-primary" @click="confirmSubmit">はい</button>
+                        <button class="btn" @click="showSubmitQuestionModal = false">いいえ</button>
+                        <button class="btn btn-primary" @click="confirmSubmitAnswerSubmit">はい</button>
+                    </div>
+                </div>
+            </div>
+            <div v-if="showDisplayAnswerModal" class="modal modal-open">
+                <div class="modal-box">
+                    <h2 class="font-bold">確認</h2>
+                    <p>この質問の回答を表示しますか？</p>
+                    <div class="modal-action">
+                        <button class="btn" @click="showDisplayAnswerModal = false">いいえ</button>
+                        <button class="btn btn-primary" @click="confirmDisplayAnswer">はい</button>
                     </div>
                 </div>
             </div>
@@ -115,8 +148,8 @@ const goToSummary = () => {
                     <p>このクイズを最初からやり直しますか？</p>
                     <p>※この操作は取り消すことができません。</p>
                     <div class="modal-action">
-                      <button class="btn" @click="showClearQuestionModal = false">いいえ</button>
-                      <button class="btn btn-error" @click="confirmClearQuestion">はい</button>
+                        <button class="btn" @click="showClearQuestionModal = false">いいえ</button>
+                        <button class="btn btn-error" @click="confirmClearQuestion">はい</button>
                     </div>
                 </div>
             </div>
