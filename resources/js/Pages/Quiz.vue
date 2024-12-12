@@ -25,6 +25,8 @@ onMounted(() => {
         const data = snapshot.val();
         if (data) {
             question.value = data;
+            // Firebaseイベント発火時にanswerをリセット
+            answer.value = '';
         }
     });
 });
