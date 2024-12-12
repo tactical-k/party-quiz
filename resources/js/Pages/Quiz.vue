@@ -25,6 +25,8 @@ onMounted(() => {
         const data = snapshot.val();
         if (data) {
             question.value = data;
+            // Firebaseイベント発火時にanswerをリセット
+            answer.value = '';
         }
     });
 });
@@ -67,14 +69,16 @@ const submitAnswer = async () => {
             <!-- 質問の場合 -->
             <div v-if="question.type === 'question'">
                 <h2 class="text-2xl font-bold mb-4">{{ question.text }}</h2>
+                <div class="divider"></div>
                 <div v-for="choice in question.choices" :key="choice">
                     <div class="flex items-center mb-2">
                         <input type="radio" :id="choice" :value="choice" v-model="answer" class="mr-2 radio radio-primary" />
                         <label :for="choice" class="cursor-pointer">{{ choice }}</label>
                     </div>
                 </div>
+                <div class="divider"></div>
                 <div>
-                    <button @click="submitAnswer" class="btn btn-primary w-full">送信</button>
+                    <button @click="submitAnswer" class="btn btn-primary w-full mt-3">送信</button>
                 </div>
             </div>
             <!-- 回答の場合 -->
